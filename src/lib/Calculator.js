@@ -53,5 +53,4 @@ class Calculator {
   }
 }
 
-const calculator = new Calculator()
-console.log(calculator.sub('08:45:00', '10:30:00'))
+export { Calculator }
