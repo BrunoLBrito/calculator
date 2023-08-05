@@ -8,27 +8,55 @@ const operatorText = document.querySelector('#operator-text')
 const form = document.querySelector('form')
 const result = document.querySelector('#result')
 
-function mask(event, element) {
-  let regex = /[0-9]/g
+function maskInputPlusMinus(input) {
+  const value = input.value.replace(/\D/g, '') // Remove all non-digits
+  const formattedValue = []
 
-  if (regex.test(event.key) && element.value.length < 8) {
-    if (element.value.length == 2 || element.value.length == 5) {
-      element.value += ':'
+  for (let i = 0; i < value.length && i < 6; i++) {
+    if (i === 2 || i === 4) {
+      formattedValue.push(':')
     }
-  } else {
-    event.returnValue = false
-    if (event.preventDefault) event.preventDefault()
+    formattedValue.push(value[i])
   }
+
+  input.value = formattedValue.join('')
 }
 
-inputs.forEach(input => {
-  input.onkeypress = e => mask(e, input)
+function maskInputMultiplyDivide(input) {
+  const value = input.value.replace(/\D/g, '') // Remove all non-digits
+  const formattedValue = []
+
+  for (let i = 0; i < value.length && i < 5; i++) {
+    formattedValue.push(value[i])
+  }
+
+  input.value = formattedValue.join('')
+}
+
+inputs.forEach((input, index) => {
+  input.addEventListener('input', () => {
+    const operator = selectOperator.options[selectOperator.selectedIndex].value
+    if (index === 1 && (operator === '*' || operator === '/')) {
+      maskInputMultiplyDivide(input)
+    } else {
+      maskInputPlusMinus(input)
+    }
+  })
 })
 
-selectOperator.onchange = e => {
+inputs.forEach(input => {
+  input.addEventListener('focus', () => {
+    input.setAttribute('type', 'tel')
+  })
+  input.addEventListener('blur', () => {
+    input.setAttribute('type', 'text')
+  })
+})
+
+selectOperator.onchange = () => {
   const operator = selectOperator.options[selectOperator.selectedIndex].value
-  const first = document.querySelectorAll('input')[0]
-  const last = document.querySelectorAll('input')[1]
+
+  const [first, last] = document.querySelectorAll('input')
 
   last.value = ''
   first.value = ''
@@ -37,22 +65,18 @@ selectOperator.onchange = e => {
   switch (operator) {
     case '+':
       operatorText.innerText = '+'
-      last.type = 'text'
       last.placeholder = '00:00:00'
       break
     case '-':
       operatorText.innerText = '-'
-      last.type = 'text'
       last.placeholder = '00:00:00'
       break
     case '*':
       operatorText.innerText = 'x'
-      last.type = 'number'
       last.placeholder = 'valor'
       break
     case '/':
       operatorText.innerText = '÷'
-      last.type = 'number'
       last.placeholder = 'valor'
       break
   }
@@ -66,21 +90,20 @@ form.onsubmit = e => {
 
   const operator = selectOperator.options[selectOperator.selectedIndex].value
 
-  const first = document.querySelectorAll('input')[0].value
-  const last = document.querySelectorAll('input')[1].value
+  const [first, last] = document.querySelectorAll('input')
 
   switch (operator) {
     case '+':
-      value = calculator.sum(first, last)
+      value = calculator.sum(first.value, last.value)
       break
     case '-':
-      value = calculator.sub(first, last)
+      value = calculator.sub(first.value, last.value)
       break
     case '*':
-      value = calculator.multi(first, last)
+      value = calculator.multi(first.value, last.value)
       break
     case '/':
-      value = calculator.divide(first, last)
+      value = calculator.divide(first.value, last.value)
       break
   }
 
