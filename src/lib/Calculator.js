@@ -51,6 +51,20 @@ class Calculator {
 
     return this.secondsToSchedule(sumSeconds)
   }
+
+  multi(time, number) {
+    const firstSeconds = this.convertToSeconds(time)
+    const multi = firstSeconds * number
+
+    return this.secondsToSchedule(multi)
+  }
+
+  divide(time, number) {
+    const firstSeconds = this.convertToSeconds(time)
+    const divide = firstSeconds / number
+
+    return this.secondsToSchedule(divide)
+  }
 }
 
 export { Calculator }
