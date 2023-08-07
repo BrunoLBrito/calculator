@@ -1,6 +1,8 @@
 // webpack.config.js
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 module.exports = {
   mode: 'development',
@@ -23,7 +25,7 @@ module.exports = {
       },
       {
         test: /\.(scss|css)$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       }
     ]
   },
@@ -39,6 +41,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: './src/index.html' // Caminho para o arquivo index.html
-    })
-  ]
+    }),
+    new MiniCssExtractPlugin()
+  ],
+  optimization: {
+    minimizer: [new CssMinimizerPlugin()],
+    minimize: true
+  }
 }
