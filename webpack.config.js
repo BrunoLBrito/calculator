@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 module.exports = {
-  mode: 'development',
+  mode: 'production', // development
   entry: './src/main.js', // Arquivo de entrada principal do seu projeto
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -47,5 +47,9 @@ module.exports = {
   optimization: {
     minimizer: [new CssMinimizerPlugin()],
     minimize: true
+  },
+  performance: {
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
   }
 }
